@@ -4,7 +4,7 @@
  * Sets CORS headers to allow for reading menus.
  *
  * @link 		https://www.slushman.com
- * @since 		1.0.0
+ * @since 		1.0.2
  * @package 	WpmenuRestApi\Includes
  * @author 		Slushman <chris@slushman.com>
  */
@@ -17,7 +17,7 @@ class Cors {
 	 * Registers all the WordPress hooks and filters related to this class.
 	 *
 	 * @hooked 		init
-	 * @since 		1.0.0
+	 * @since 		1.0.2
 	 */
 	public function hooks() {
 
@@ -28,7 +28,10 @@ class Cors {
 	} // hooks()
 
 	/**
+	 * Allows GET requests for CORS from any origin.
 	 * 
+	 * @hooked 		rest_pre_serve_request 		10
+	 * @since 		1.0.2
 	 */
 	public function set_cors( $value ) {
 
