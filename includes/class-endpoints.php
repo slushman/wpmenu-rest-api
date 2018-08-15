@@ -105,28 +105,14 @@ class Endpoints {
 
 		if ( ! is_int( $id ) ) { return array(); }
 
-		$wpMenuObject = wp_get_nav_menu_object( $id );
-		$wpMenuItems  = $id ? wp_get_nav_menu_items( $id ) : array();
-
-		if ( ! is_object( $wpMenuObject ) ) { return array(); }
-
-		$restMenuItems = array();
-
-		foreach ( $wpMenuItems as $wpMenuItem ) {
-
-			$formattedItem = $this->format_menu_item( $wpMenuItem );
-
-			array_push( $restMenuItems, $formattedItem );
-	
-		}
-
+		$wpMenuObject 					= wp_get_nav_menu_object( $id );
 		$restMenu 						= new \stdClass();
 		$restMenu->ID 					= abs( $wpMenuObject->term_id );
 		$restMenu->name        			= $wpMenuObject->name;
 		$restMenu->slug        			= $wpMenuObject->slug;
 		$restMenu->description 			= $wpMenuObject->description;
 		$restMenu->count       			= abs( $wpMenuObject->count );
-		$restMenu->items 				= $restMenuItems;
+		$restMenu->items 				= $this->get_menu_items( $id );
 		$restMenu->_links 				= new \stdClass();
 		$restMenu->_links->collection 	= $this->get_endpoint_url( '/menus' );
 		$restMenu->_links->self       	= $this->get_endpoint_url( '/menus' ) . $id;
@@ -136,10 +122,9 @@ class Endpoints {
 		 * 
 		 * @param 		object 		$restMenu 			The formatted menu.
 		 * @param 		array 		$wpMenuObject 		The WP Menu object.
-		 * @param 		array 		$wpMenuItems 		The menu items.
 		 * @param 		array 		$request 			The REST request.
 		 */
-		$menu = apply_filters( 'wpmra_rest_menu', $restMenu, $wpMenuObject, $wpMenuItems, $request );
+		$menu = apply_filters( 'wpmra_rest_menu', $restMenu, $wpMenuObject, $request );
 
 		return is_object( $menu ) ? $menu : array();
 
@@ -171,6 +156,7 @@ class Endpoints {
 			$menu->slug        			= $wp_menu->slug;
 			$menu->description 			= $wp_menu->description;
 			$menu->count       			= $wp_menu->count;
+			$menu->items 				= $this->get_menu_items( $wp_menu->term_id, $wp_menu );
 			$menu->_links 				= new \stdClass();
 			$menu->_links->collection 	= $this->get_endpoint_url( '/menus' );
 			$menu->_links->self       	= $this->get_endpoint_url( '/menus' ) . $wp_menu->term_id;
@@ -210,12 +196,15 @@ class Endpoints {
 		
 				if ( ! isset( $locations[$slug] ) ) { continue; }
 
-				$restMenus[$slug] 						= new \stdClass();
-				$restMenus[$slug]->ID 					= $locations[$slug];
-				$restMenus[$slug]->label 				= $label;
-				$restMenus[$slug]->_links 				= new \stdClass();
-				$restMenus[$slug]->_links->collection 	= $this->get_endpoint_url( '/menu-locations' );
-				$restMenus[$slug]->_links->self			= $this->get_endpoint_url( '/menu-locations' ) . $slug;
+				$menu 						= new \stdClass();
+				$menu->slug 				= $slug;
+				$menu->label 				= $label;
+				$menu->items 				= $this->get_menu_items( $locations[$slug] );
+				$menu->_links 				= new \stdClass();
+				$menu->_links->collection 	= $this->get_endpoint_url( '/menu-locations' );
+				$menu->_links->self			= $this->get_endpoint_url( '/menu-locations' ) . $slug;
+
+				array_push( $restMenus, $menu );
 
 			endforeach;
 
@@ -243,11 +232,26 @@ class Endpoints {
 		
 		if ( ! isset( $locations[$location] ) ) { return array(); }
 		
-		$wpMenu 	= wp_get_nav_menu_object( $locations[$location] );
-		$menuItems 	= wp_get_nav_menu_items( $wpMenu->term_id );
+		return $this->get_menu_items( $locations[$location] );
+	
+	} // get_menu_location()
+
+	/**
+	 * Returns the formatted menu items for the requested menuID.
+	 * 
+	 * @exits 		If $menuID is empty.
+	 * @since 		1.0.0
+	 * @param 		int 		$menuID 		The menu ID.
+	 * @param 		obj 		$menuObj 		Optional. The menu object.
+	 * @return 		array 						The formatted menu items.
+	 */
+	public function get_menu_items( $menuID ) {
+
+		if ( ! is_int( $menuID ) ) { return array(); }
+
+		$menuItems  = $menuID ? wp_get_nav_menu_items( $menuID ) : array();
 		$revItems 	= array_reverse( $menuItems );
 		$revMenu  	= array();
-		$cache 		= array();
 		
 		foreach ( $revItems as $menuItem ) :
 
@@ -259,7 +263,7 @@ class Endpoints {
 		
 		return array_reverse( $revMenu );
 	
-	} // get_menu_location()
+	} // get_menu_items()
 
 	/**
 	 * Returns the namespace string for this plugin's endpoints.
