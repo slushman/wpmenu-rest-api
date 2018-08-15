@@ -240,7 +240,7 @@ class Endpoints {
 	 * Returns the formatted menu items for the requested menuID.
 	 * 
 	 * @exits 		If $menuID is empty.
-	 * @since 		1.0.0
+	 * @since 		1.0.3
 	 * @param 		int 		$menuID 		The menu ID.
 	 * @param 		obj 		$menuObj 		Optional. The menu object.
 	 * @return 		array 						The formatted menu items.

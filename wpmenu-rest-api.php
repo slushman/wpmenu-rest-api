@@ -11,7 +11,7 @@
  * Plugin Name:       WPMenu REST API
  * Plugin URI:        https://www.github.com/slushman/wpmenu-rest-api
  * Description:       Adds REST endpoints for menus and menu locations.
- * Version:           1.0.2
+ * Version:           1.0.3
  * Author:            slushman
  * Author URI:        https://www.slushman.com
  * License:           GPL-2.0+
