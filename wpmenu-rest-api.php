@@ -8,16 +8,18 @@
  * @package           Wpmenu_Rest_Api
  *
  * @wordpress-plugin
- * Plugin Name:       WPMenu REST API
- * Plugin URI:        https://www.github.com/slushman/wpmenu-rest-api
- * Description:       Adds REST endpoints for menus and menu locations.
- * Version:           1.0.3
- * Author:            slushman
- * Author URI:        https://www.slushman.com
- * License:           GPL-2.0+
- * License URI:       http://www.gnu.org/licenses/gpl-2.0.txt
- * Text Domain:       wpmenu-rest-api
- * Domain Path:       /languages
+ * Plugin Name:       		WPMenu REST API
+ * Plugin URI:       		 https://www.github.com/slushman/wpmenu-rest-api
+ * Description:      		 Adds REST endpoints for menus and menu locations.
+ * Version:           		1.0.3
+ * Author:            		slushman
+ * Author URI:      	  	https://www.slushman.com
+ * GitHub Plugin URI: 		https://github.com/slushman/wpmenu-rest-api/
+ * Github Branch: 			master
+ * License:           		GPL-2.0+
+ * License URI:       		http://www.gnu.org/licenses/gpl-2.0.txt
+ * Text Domain:       		wpmenu-rest-api
+ * Domain Path:      		 /languages
  */
 
 use WpmenuRestApi\Includes as Inc;
