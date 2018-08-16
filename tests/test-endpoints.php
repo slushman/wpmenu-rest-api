@@ -401,20 +401,20 @@ class EndpointsTest extends WP_UnitTestCase {
 	} // test_get_menus()
 
 	/**
-	 * Tests that get_menu_location(0 returns the menu location
+	 * Tests that get_location() returns the menu location
 	 * object of the requestion menu location.
 	 * 
-	 * @covers 			Endpoints::get_menu_location()
+	 * @covers 			Endpoints::get_location()
 	 * @expects 		object
 	 * @since 			1.0.0
 	 * @uses 			return_formattedMenuItems()
-	 * @uses 			get_menu_location()
+	 * @uses 			get_location()
 	 */
 	public function test_menu_location_with_items() {
 
 		$formattedTestMenuItems = $this->return_formattedMenuItems();
 		$testMenuLocation1 		= 'primary';
-		$check1 				= $this->endpoints->get_menu_location( array( 'location' => $testMenuLocation1 ) );
+		$check1 				= $this->endpoints->get_location( array( 'location' => $testMenuLocation1 ) );
 
 		$this->assertInternalType( 'array', $check1 );
 		$this->assertEquals( $check1, $formattedTestMenuItems );
@@ -422,19 +422,19 @@ class EndpointsTest extends WP_UnitTestCase {
 	} // test_menu_location_with_items()
 
 	/**
-	 * Tests that get_menu_location() returns a blank array when fetching
+	 * Tests that get_location() returns a blank array when fetching
 	 * an empty menu location.
 	 * 
-	 * @covers 			Endpoints::get_menu_location()
+	 * @covers 			Endpoints::get_location()
 	 * @expects 		object
 	 * @since 			1.0.0
-	 * @uses 			get_menu_location()
+	 * @uses 			get_location()
 	 */
 	public function test_empty_menu_location() {
 
 		// Should be empty since social contains no items.
 		$testMenuLocation1 	= 'social';
-		$check1 			= $this->endpoints->get_menu_location( array( 'location' => $testMenuLocation1 ) );
+		$check1 			= $this->endpoints->get_location( array( 'location' => $testMenuLocation1 ) );
 
 		$this->assertInternalType( 'array', $check1 );
 		$this->assertEquals( $check1, array() );
@@ -442,13 +442,13 @@ class EndpointsTest extends WP_UnitTestCase {
 	} // test_empty_menu_location()
 
 	/**
-	 * Tests that get_menu_locations() returns an array of menu locations
+	 * Tests that get_locations() returns an array of menu locations
 	 * and the menus assigned to them.
 	 * 
-	 * @covers 			Endpoints::get_menu_locations()
+	 * @covers 			Endpoints::get_locations()
 	 * @expects 		array
 	 * @since 			1.0.0
-	 * @uses 			get_menu_locations()
+	 * @uses 			get_locations()
 	 */
 	public function test_returns_array_of_menu_locations() {
 
@@ -465,7 +465,7 @@ class EndpointsTest extends WP_UnitTestCase {
 		$result1[$testMenuLocation1]->_links->collection 	= 'http://example.org/wp-json/wpmenu/v1/menu-locations/';
 		$result1[$testMenuLocation1]->_links->self			= 'http://example.org/wp-json/wpmenu/v1/menu-locations/primary';
 
-		$check1 = $this->endpoints->get_menu_locations();
+		$check1 = $this->endpoints->get_locations();
 
 		$this->assertInternalType( 'array', $check1 );
 		$this->assertEquals( $check1, $result1 );

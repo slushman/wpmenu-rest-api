@@ -90,6 +90,82 @@ class Endpoints {
 	} // get_rest_url()
 
 	/**
+	 * Get menu for location.
+	 * 
+	 * wp_get_nav_menu_items() outputs a list that's already sequenced correctly.
+	 * So the easiest thing to do is to reverse the list and then build our tree
+	 * from the ground up
+	 *
+	 * @used-by 		test_menu_location_with_items
+	 * @used-by 		test_empty_menu_location
+	 * @since 			1.0.0
+	 * @param 			array 		$request 		The REST request.
+	 * @return 			array 						The menu for the corresponding location
+	 */
+	public function get_location( $request ) {
+
+		$location   = $request['location'];
+		$locations  = get_nav_menu_locations();
+		
+		if ( ! isset( $locations[$location] ) ) { return array(); }
+
+		$restMenu 						= new \stdClass();
+		$restMenu->slug 				= $location;
+		$restMenu->items 				= $this->get_menu_items( $locations[$location] );
+		$restMenu->_links 				= new \stdClass();
+		$restMenu->_links->collection 	= $this->get_endpoint_url( '/menu-locations' );
+		$restMenu->_links->self       	= $this->get_endpoint_url( '/menu-locations' ) . $locations[$location];
+
+		/**
+		 * The wpmra_rest_location filter.
+		 * 
+		 * @param 		object 		$restMenu 			The formatted menu.
+		 * @param 		array 		$locations 			The menu locations.
+		 * @param 		array 		$request 			The REST request.
+		 */
+		$menu = apply_filters( 'wpmra_rest_location', $restMenu, $locations, $request );
+
+		return is_object( $menu ) ? $menu : array();
+
+	} // get_location()
+
+	/**
+	 * Returns all the menu locations.
+	 *
+	 * @used-by 		test_returns_array_of_menu_locations
+	 * @since 			1.0.0
+	 * @return 			array 						All registered menus locations
+	 */
+	public function get_locations() {
+
+		$locations        	= get_nav_menu_locations();
+		$registeredMenus 	= get_registered_nav_menus();
+		$restMenus       	= array();
+		
+		if ( $locations && $registeredMenus ) :
+		
+			foreach ( $registeredMenus as $slug => $label ) :
+		
+				if ( ! isset( $locations[$slug] ) ) { continue; }
+
+				$menu 						= new \stdClass();
+				$menu->slug 				= $slug;
+				$menu->label 				= $label;
+				$menu->_links 				= new \stdClass();
+				$menu->_links->collection 	= $this->get_endpoint_url( '/menu-locations' );
+				$menu->_links->self			= $this->get_endpoint_url( '/menu-locations' ) . $slug;
+
+				array_push( $restMenus, $menu );
+
+			endforeach;
+
+		endif;
+
+		return $restMenus;
+
+	} // get_locations()
+
+	/**
 	 * Returns a single WordPress menu, based on the ID.
 	 * 
 	 * @used-by 		test_get_menu()
@@ -156,7 +232,6 @@ class Endpoints {
 			$menu->slug        			= $wp_menu->slug;
 			$menu->description 			= $wp_menu->description;
 			$menu->count       			= $wp_menu->count;
-			$menu->items 				= $this->get_menu_items( $wp_menu->term_id, $wp_menu );
 			$menu->_links 				= new \stdClass();
 			$menu->_links->collection 	= $this->get_endpoint_url( '/menus' );
 			$menu->_links->self       	= $this->get_endpoint_url( '/menus' ) . $wp_menu->term_id;
@@ -176,65 +251,6 @@ class Endpoints {
 		return is_array( $menus ) ? $menus : array();
 		
 	} // get_menus()
-
-	/**
-	 * Returns all the menu locations.
-	 *
-	 * @used-by 		test_get_menu_locations
-	 * @since 			1.0.0
-	 * @return 			array 						All registered menus locations
-	 */
-	public function get_menu_locations() {
-
-		$locations        	= get_nav_menu_locations();
-		$registeredMenus 	= get_registered_nav_menus();
-		$restMenus       	= array();
-		
-		if ( $locations && $registeredMenus ) :
-		
-			foreach ( $registeredMenus as $slug => $label ) :
-		
-				if ( ! isset( $locations[$slug] ) ) { continue; }
-
-				$menu 						= new \stdClass();
-				$menu->slug 				= $slug;
-				$menu->label 				= $label;
-				$menu->items 				= $this->get_menu_items( $locations[$slug] );
-				$menu->_links 				= new \stdClass();
-				$menu->_links->collection 	= $this->get_endpoint_url( '/menu-locations' );
-				$menu->_links->self			= $this->get_endpoint_url( '/menu-locations' ) . $slug;
-
-				array_push( $restMenus, $menu );
-
-			endforeach;
-
-		endif;
-
-		return $restMenus;
-
-	} // get_menu_locations()
-
-	/**
-	 * Get menu for location.
-	 * 
-	 * wp_get_nav_menu_items() outputs a list that's already sequenced correctly.
-	 * So the easiest thing to do is to reverse the list and then build our tree
-	 * from the ground up
-	 *
-	 * @since 		1.0.0
-	 * @param 		array 		$request 		The REST request.
-	 * @return 		array 						The menu for the corresponding location
-	 */
-	public function get_menu_location( $request ) {
-
-		$location   = $request['location'];
-		$locations  = get_nav_menu_locations();
-		
-		if ( ! isset( $locations[$location] ) ) { return array(); }
-		
-		return $this->get_menu_items( $locations[$location] );
-	
-	} // get_menu_location()
 
 	/**
 	 * Returns the formatted menu items for the requested menuID.
@@ -346,12 +362,12 @@ class Endpoints {
 
 		register_rest_route( $this->get_namespace(), '/menu-locations', array(
 			'methods' => \WP_REST_Server::READABLE,
-			'callback' => array( $this, 'get_menu_locations' )
+			'callback' => array( $this, 'get_locations' )
 		) );
 
 		register_rest_route( $this->get_namespace(), '/menu-locations/(?P<location>[a-zA-Z0-9_-]+)', array(
 			'methods' => \WP_REST_Server::READABLE,
-			'callback' => array( $this, 'get_menu_location' )
+			'callback' => array( $this, 'get_location' )
 		) );
 
 	} // register_routes()
