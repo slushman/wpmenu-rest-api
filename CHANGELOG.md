@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.0.4
+* Remove menu items from get_menus and get_locations requests.
+
 ## 1.0.3
 * Adds menu items to menus, locations, and individual requests.
 

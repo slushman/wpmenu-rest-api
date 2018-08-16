@@ -61,6 +61,9 @@ This plugin opens up the CORS headers for the menus for GET requests, but nothin
 
 == Changelog ==
 
+= 1.0.4 =
+* Remove menu items from get_menus and get_locations requests.
+
 = 1.0.3 =
 * Adds menu items to menus, locations, and individual requests.
 
@@ -73,6 +76,9 @@ This plugin opens up the CORS headers for the menus for GET requests, but nothin
 
 
 == Upgrade Notice ==
+
+= 1.0.4 =
+* Remove menu items from get_menus and get_locations requests.
 
 = 1.0.3 =
 * Adds menu items to menus, locations, and individual requests.
