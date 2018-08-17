@@ -35,15 +35,6 @@ class Cors {
 	 */
 	public function set_cors( $value ) {
 
-		$origin = get_http_origin();
-		
-		if ( $origin ) {
-		
-			header( 'Access-Control-Allow-Origin: ' . esc_url_raw( $origin ) );
-		
-		}
-		
-		header( 'Access-Control-Allow-Origin: ' . esc_url_raw( site_url() ) );
 		header( 'Access-Control-Allow-Origin: *' );
 		header( 'Access-Control-Allow-Methods: GET' );
 

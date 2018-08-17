@@ -4,7 +4,7 @@ Donate link: https://www.slushman.com
 Tags: rest-api, rest, menu, menus
 Requires at least: 4.7
 Tested up to: 4.9.8
-Stable tag: 1.0.5
+Stable tag: 1.0.5.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -61,6 +61,9 @@ This plugin opens up the CORS headers for the menus for GET requests, but nothin
 
 == Changelog ==
 
+= 1.0.5.1 =
+* Removed all other headers for CORS.
+
 = 1.0.5 =
 * Allow any origin for CORS.
 
@@ -79,6 +82,9 @@ This plugin opens up the CORS headers for the menus for GET requests, but nothin
 
 
 == Upgrade Notice ==
+
+= 1.0.5.1 =
+* Removed all other headers for CORS.
 
 = 1.0.5 =
 * Allow any origin for CORS.

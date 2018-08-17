@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.0.5.1
+* Removed all other headers for CORS.
+
 ## 1.0.5
 * Allow any origin for CORS.
 
