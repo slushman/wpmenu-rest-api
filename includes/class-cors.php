@@ -37,6 +37,7 @@ class Cors {
 
 		header( 'Access-Control-Allow-Origin: *' );
 		header( 'Access-Control-Allow-Methods: GET' );
+		header( 'WPMRA_VERSION: ' . WPMRA_VERSION );
 
 		return $value;
 

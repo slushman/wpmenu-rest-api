@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.0.5.2
+* Testing CORS headers.
+
 ## 1.0.5.1
 * Removed all other headers for CORS.
 
