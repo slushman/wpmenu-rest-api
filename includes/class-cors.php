@@ -44,6 +44,7 @@ class Cors {
 		}
 		
 		header( 'Access-Control-Allow-Origin: ' . esc_url_raw( site_url() ) );
+		header( 'Access-Control-Allow-Origin: *' );
 		header( 'Access-Control-Allow-Methods: GET' );
 
 		return $value;

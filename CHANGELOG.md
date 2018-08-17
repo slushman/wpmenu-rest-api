@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.0.5
+* Allow any origin for CORS.
+
 ## 1.0.4
 * Remove menu items from get_menus and get_locations requests.
 
